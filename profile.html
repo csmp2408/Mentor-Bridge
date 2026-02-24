@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Complete Your Profile - MentorBridge</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <header class="header">
+    <a href="/" class="logo">
+      <div ><img src="logo.jpeg" alt="" style="height: 100px; width: auto;"></div>
+      <span>Mentor</span><span>Bridge</span>
+    </a>
+    <nav class="nav-links">
+      <span id="userName"></span>
+      <a href="#" class="btn btn-secondary" id="btnLogout">Logout</a>
+    </nav>
+  </header>
+
+  <main>
+    <div class="profile-form">
+      <h2>Complete Your Profile</h2>
+      <p style="color: var(--gray-600); margin-bottom: 1.5rem;">Tell us about your goals to help us find the perfect mentor for you.</p>
+
+      <form id="profileForm">
+        <div class="form-group">
+          <label for="name">Full Name</label>
+          <input type="text" id="name" required>
+        </div>
+
+        <div id="mentorFields" style="display: none;">
+          <div class="form-group">
+            <label for="skills">Skills (comma-separated)</label>
+            <input type="text" id="skills" placeholder="e.g., React, Node.js, System Design">
+          </div>
+          <div class="form-group">
+            <label for="experience">Experience (years)</label>
+            <input type="number" id="experience" min="0" placeholder="e.g., 5">
+          </div>
+          <div class="form-group">
+            <label for="motto">Motto</label>
+            <input type="text" id="motto" placeholder="Your coaching philosophy">
+          </div>
+          <div class="form-group">
+            <label for="availability">Availability</label>
+            <input type="text" id="availability" placeholder="e.g., Tue, Thu after 6 PM">
+          </div>
+        </div>
+
+        <div id="menteeFields" style="display: none;">
+          <div class="form-group">
+            <label>Skills You Want to Learn</label>
+            <p style="font-size: 0.85rem; color: var(--gray-600); margin-bottom: 0.5rem;">Select all that apply</p>
+            <div class="checkbox-grid" id="skillsCheckboxes"></div>
+          </div>
+          <div class="form-group">
+            <label>Preferred Learning Domains</label>
+            <p style="font-size: 0.85rem; color: var(--gray-600); margin-bottom: 0.5rem;">Select your areas of interest</p>
+            <div class="checkbox-grid" id="domainsCheckboxes"></div>
+          </div>
+          <div class="form-group">
+            <label for="learningGoals">Learning Goals</label>
+            <input type="text" id="learningGoals" placeholder="e.g., Build full-stack applications, Master React...">
+          </div>
+          <div class="form-group">
+            <label for="availabilityMentee">Availability</label>
+            <select id="availabilityMentee">
+              <option value="">Select your availability</option>
+              <option value="Weekday evenings">Weekday evenings</option>
+              <option value="Weekends">Weekends</option>
+              <option value="Flexible">Flexible</option>
+              <option value="Mornings">Mornings</option>
+            </select>
+          </div>
+        </div>
+
+        <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 1rem;">Complete Profile</button>
+      </form>
+    </div>
+  </main>
+
+  <script src="js/auth.js"></script>
+  <script src="js/api.js"></script>
+  <script>
+    const user = requireAuth();
+    if (!user) throw new Error('Not logged in');
+
+    document.getElementById('userName').textContent = user.name || user.email;
+
+    const MENTEE_SKILLS = ['JavaScript', 'Node.js', 'UI/UX Design', 'Mobile Development', 'Python', 'Machine Learning', 'Product Management', 'Cloud Computing', 'React', 'Data Science', 'DevOps', 'Cybersecurity'];
+    const MENTEE_DOMAINS = ['Web Development', 'Machine Learning', 'Cloud & DevOps', 'Blockchain', 'Mobile Development', 'UI/UX Design', 'Cybersecurity', 'Data Science', 'Product Management', 'Game Development'];
+
+    const mentorFields = document.getElementById('mentorFields');
+    const menteeFields = document.getElementById('menteeFields');
+
+    if (user.role === 'mentor') {
+      mentorFields.style.display = 'block';
+      document.getElementById('name').value = user.name || '';
+      document.getElementById('skills').value = (user.skills || []).join(', ');
+      document.getElementById('experience').value = user.experience || '';
+      document.getElementById('motto').value = user.motto || '';
+      document.getElementById('availability').value = user.availability || '';
+    } else {
+      menteeFields.style.display = 'block';
+      document.getElementById('name').value = user.name || '';
+      document.getElementById('learningGoals').value = user.learningGoals || '';
+      document.getElementById('availabilityMentee').value = user.availability || '';
+
+      const skillsCb = document.getElementById('skillsCheckboxes');
+      MENTEE_SKILLS.forEach(s => {
+        const label = document.createElement('label');
+        label.innerHTML = `<input type="checkbox" name="skill" value="${s}"> ${s}`;
+        skillsCb.appendChild(label);
+      });
+
+      const domainsCb = document.getElementById('domainsCheckboxes');
+      MENTEE_DOMAINS.forEach(d => {
+        const label = document.createElement('label');
+        label.innerHTML = `<input type="checkbox" name="domain" value="${d}"> ${d}`;
+        domainsCb.appendChild(label);
+      });
+
+      (user.skills || []).forEach(s => {
+        const cb = skillsCb.querySelector(`input[value="${s}"]`);
+        if (cb) cb.checked = true;
+      });
+      (user.preferredDomains || []).forEach(d => {
+        const cb = domainsCb.querySelector(`input[value="${d}"]`);
+        if (cb) cb.checked = true;
+      });
+    }
+
+    document.getElementById('btnLogout').addEventListener('click', (e) => {
+      e.preventDefault();
+      clearSession();
+      window.location.href = '/';
+    });
+
+    document.getElementById('profileForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      let data = { name: document.getElementById('name').value };
+
+      if (user.role === 'mentor') {
+        data.skills = document.getElementById('skills').value.split(',').map(s => s.trim()).filter(Boolean);
+        data.experience = parseInt(document.getElementById('experience').value) || 0;
+        data.motto = document.getElementById('motto').value;
+        data.availability = document.getElementById('availability').value;
+      } else {
+        data.learningGoals = document.getElementById('learningGoals').value;
+        data.availability = document.getElementById('availabilityMentee').value;
+        data.skills = Array.from(document.querySelectorAll('input[name="skill"]:checked')).map(c => c.value);
+        data.preferredDomains = Array.from(document.querySelectorAll('input[name="domain"]:checked')).map(c => c.value);
+      }
+
+      try {
+        const updated = await api.updateUser(user.id, data);
+        setSession(updated);
+        window.location.href = user.role === 'mentor' ? '/mentor-dashboard.html' : '/mentee-dashboard.html';
+      } catch (err) {
+        alert(err.message || 'Failed to save profile');
+      }
+    });
+  </script>
+</body>
+</html>

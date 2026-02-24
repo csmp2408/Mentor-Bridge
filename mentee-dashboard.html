@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mentee Dashboard - MentorBridge</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <header class="header">
+    <a href="/" class="logo">
+      <div ><img src="logo.jpeg" alt="" style="height: 100px; width: auto;"></div>
+      <span>Mentor</span><span>Bridge</span>
+    </a>
+    <nav class="nav-links">
+      <span id="userName"></span>
+      <span class="tag teal">Mentee</span>
+      <a href="mentee-dashboard.html" class="btn btn-secondary">My Roadmap</a>
+      <a href="mentee-dashboard.html#mentors" class="btn btn-secondary">Find Mentors</a>
+      <a href="/profile.html" class="btn btn-secondary">Edit Profile</a>
+      <a href="#" class="btn btn-secondary" id="btnLogout">Logout</a>
+    </nav>
+  </header>
+
+  <main class="dashboard">
+    <div class="dashboard-header">
+      <h1>Welcome back, <span id="welcomeName"></span>! 👋</h1>
+      <p id="welcomeSub">You're making great progress. Schedule sessions with your mentor to stay on track.</p>
+      <div class="dash-actions">
+        <a href="/profile.html" class="btn btn-secondary">Edit Profile</a>
+      </div>
+    </div>
+
+    <!-- Metrics -->
+    <div class="metrics">
+      <div class="metric-card">
+        <div class="value" id="metricHours">0</div>
+        <div class="label">Total Hours</div>
+      </div>
+      <div class="metric-card">
+        <div class="value" id="metricRoadmap">0%</div>
+        <div class="label">Roadmap</div>
+      </div>
+      <div class="metric-card">
+        <div class="value" id="metricSessions">0</div>
+        <div class="label">Sessions</div>
+      </div>
+    </div>
+
+    <!-- Skill Gap Analysis -->
+    <div class="card" id="skillGapCard">
+      <h3>Skill Gap Analysis</h3>
+      <p style="color: var(--gray-600); font-size: 0.9rem; margin-bottom: 1rem;">Compare your skills vs your mentor's expertise</p>
+      <div id="skillGapContent">
+        <p class="empty-state" id="skillGapEmpty">Select a mentor to see skill gap analysis.</p>
+        <div id="skillGapBars" style="display: none;"></div>
+      </div>
+    </div>
+
+    <!-- 4-Week Roadmap -->
+    <div class="card">
+      <h3>Your 4-Week Learning Roadmap <span class="tag" style="background: rgba(59,130,246,0.15); color: var(--blue);">AI-Generated</span></h3>
+      <p style="color: var(--gray-600); font-size: 0.9rem; margin-bottom: 1rem;">This custom path was generated based on your learning goals.</p>
+      <div id="roadmapContainer">
+        <p class="empty-state">Loading roadmap...</p>
+      </div>
+    </div>
+
+    <!-- Recommended Mentors -->
+    <div class="card" id="mentors">
+      <h3>Recommended Mentors for You</h3>
+      <p style="color: var(--gray-600); font-size: 0.9rem; margin-bottom: 1rem;">Top matches based on your profile and interests.</p>
+      <div class="mentor-grid" id="mentorGrid"></div>
+    </div>
+
+    <!-- Session CTA -->
+    <div class="card" style="background: linear-gradient(135deg, rgba(20,184,166,0.1), rgba(249,115,22,0.1));">
+      <h3>Ready for your next session?</h3>
+      <p style="color: var(--gray-600); margin-bottom: 1rem;">Booking regular sessions with mentors increases roadmap completion rates. Schedule a sync to review your progress.</p>
+      <button class="btn btn-primary" id="btnScheduleSync">Schedule Sync</button>
+    </div>
+  </main>
+
+  <!-- Chat Panel -->
+  <div class="chat-panel hidden" id="chatPanel">
+    <div class="chat-header">
+      <span id="chatPartnerName">Chat</span>
+      <button id="chatClose">×</button>
+    </div>
+    <div class="chat-messages" id="chatMessages"></div>
+    <div class="chat-input-wrap">
+      <form id="chatForm">
+        <input type="hidden" id="chatPartnerId">
+        <input type="text" id="chatInput" placeholder="Type a message..." required>
+        <button type="submit">Send</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Completion Toast -->
+  <div class="toast" id="completionToast"></div>
+
+  <footer class="footer">© 2026 MentorBridge. All rights reserved.</footer>
+
+  <script src="js/auth.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/chat-storage.js"></script>
+  <script src="js/feedback.js"></script>
+  <script src="js/mentee-dashboard.js"></script>
+</body>
+</html>

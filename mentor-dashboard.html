@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mentor Dashboard - MentorBridge</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <header class="header">
+    <a href="/" class="logo">
+      <div ><img src="logo.jpeg" alt="" style="height: 100px; width: auto;"></div>
+      <span>Mentor</span><span>Bridge</span>
+    </a>
+    <nav class="nav-links">
+      <span id="userName"></span>
+      <span class="tag teal">Mentor</span>
+      <a href="/profile.html" class="btn btn-secondary">Edit Profile</a>
+      <a href="#" class="btn btn-secondary" id="btnLogout">Logout</a>
+    </nav>
+  </header>
+
+  <main class="dashboard">
+    <div class="dashboard-header">
+      <h1>Welcome back, <span id="welcomeName"></span> 👋</h1>
+      <p>Manage your mentee connections and schedule.</p>
+      <div class="dash-actions">
+        <a href="/profile.html" class="btn btn-secondary">Edit Profile</a>
+      </div>
+    </div>
+
+    <!-- Your Mentees -->
+    <div class="card">
+      <h3>Your Mentees <button class="btn btn-secondary btn-sm" id="btnRefreshMentees" style="margin-left: 0.5rem;">Refresh</button></h3>
+      <div id="menteesContainer">
+        <div class="empty-state" id="menteesEmpty">No mentee connections yet. Mentees will appear when they select you from the "Recommended Mentors" section. Click Refresh to update.</div>
+        <div id="menteesList" class="mentor-grid" style="display: none;"></div>
+      </div>
+    </div>
+
+    <!-- Suggested Roadmap Template -->
+    <div class="card">
+      <h3>Suggested Mentee Roadmap Template</h3>
+      <p style="color: var(--gray-600); font-size: 0.9rem; margin-bottom: 1rem;">View and track mentees' progress on their 4-week roadmap.</p>
+      <div id="roadmapTemplate"></div>
+    </div>
+
+    <!-- Mentee Roadmap Progress (when a mentee is selected) -->
+    <div class="card" id="menteeRoadmapCard" style="display: none;">
+      <h3>Mentee Roadmap Progress</h3>
+      <p style="color: var(--gray-600); font-size: 0.9rem; margin-bottom: 1rem;">Roadmap for <strong id="selectedMenteeName"></strong></p>
+      <div id="menteeRoadmapContainer"></div>
+    </div>
+
+    <!-- Profile summary cards -->
+    <div class="metrics">
+      <div class="metric-card">
+        <div class="value" id="metricSkills">0</div>
+        <div class="label">Skills</div>
+      </div>
+      <div class="metric-card">
+        <div class="value" id="metricDomains">0</div>
+        <div class="label">Domains</div>
+      </div>
+      <div class="metric-card">
+        <div class="value" id="metricAvailability">-</div>
+        <div class="label">Availability</div>
+      </div>
+      <div class="metric-card">
+        <div class="value" style="font-size: 1rem;">Complete ✓</div>
+        <div class="label">Profile</div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Chat Panel -->
+  <div class="chat-panel hidden" id="chatPanel">
+    <div class="chat-header">
+      <span id="chatPartnerName">Chat</span>
+      <button id="chatClose">×</button>
+    </div>
+    <div class="chat-messages" id="chatMessages"></div>
+    <div class="chat-input-wrap">
+      <form id="chatForm">
+        <input type="hidden" id="chatPartnerId">
+        <input type="text" id="chatInput" placeholder="Type a message..." required>
+        <button type="submit">Send</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Completion Toast -->
+  <div class="toast" id="completionToast">🎉 Mentee completed all tasks!</div>
+
+  <footer class="footer">© 2026 MentorBridge. All rights reserved.</footer>
+
+  <script src="js/auth.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/chat-storage.js"></script>
+  <script src="js/feedback.js"></script>
+  <script src="js/mentor-dashboard.js"></script>
+</body>
+</html>

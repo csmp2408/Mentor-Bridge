@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MentorBridge - Bridge the Gap Between Learning and Mastery</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <header class="header">
+    <a href="/" class="logo">
+      <div ><img src="logo.jpeg" alt="" style="height: 100px; width: auto;"></div>
+      <span>Mentor</span><span>Bridge</span>
+    </a>
+    <nav class="nav-links">
+      <a href="#" class="btn btn-secondary" id="navLogin">Login</a>
+      <a href="#" class="btn btn-primary" id="navGetStarted">Get Started</a>
+    </nav>
+  </header>
+
+  <main>
+    <section class="hero">
+      <h1>Bridge the Gap Between <span class="highlight">Learning</span> and <span class="highlight-2">Mastery</span></h1>
+      <p>Connect with world-class mentors and receive custom AI-driven learning paths tailored to your career goals. Generates personalized roadmap for skill growth.</p>
+      <div>
+        <button class="btn btn-primary" id="btnStartJourney">Start Your Journey →</button>
+        <a href="#" class="btn btn-secondary" id="btnFindMentor">Find a Mentor</a>
+      </div>
+    </section>
+
+    <!-- Auth Modal / Section -->
+    <section id="authSection" class="auth-container" style="display: none;">
+      <h2 id="authTitle">Login</h2>
+      <form id="authForm">
+        <input type="hidden" id="authMode" value="login">
+        <div class="form-group">
+          <label for="authEmail">Email</label>
+          <input type="email" id="authEmail" required placeholder="you@example.com">
+        </div>
+        <div class="form-group">
+          <label for="authPassword">Password</label>
+          <input type="password" id="authPassword" required placeholder="••••••••">
+        </div>
+        <!-- Signup-only fields -->
+        <div id="signupFields" style="display: none;">
+          <div class="form-group">
+            <label for="authName">Full Name</label>
+            <input type="text" id="authName" placeholder="Your name">
+          </div>
+          <div class="form-group">
+            <label>Role</label>
+            <div class="role-select">
+              <label class="role-option" data-role="mentor">
+                <input type="radio" name="role" value="mentor"> Mentor
+              </label>
+              <label class="role-option" data-role="mentee">
+                <input type="radio" name="role" value="mentee" checked> Mentee
+              </label>
+            </div>
+          </div>
+        </div>
+        <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 0.5rem;">
+          <span id="authSubmitText">Login</span>
+        </button>
+      </form>
+      <p class="auth-footer">
+        <span id="authToggleText">Don't have an account?</span>
+        <a id="authToggleLink">Sign up</a>
+      </p>
+    </section>
+
+    <!-- Stats -->
+    <section class="hero" style="padding-top: 2rem;">
+      <div style="display: flex; justify-content: center; gap: 3rem; flex-wrap: wrap; color: var(--gray-600);">
+        <span><strong style="color: var(--teal);"></strong> Active Learners</span>
+        <span><strong style="color: var(--teal);"></strong> Verified Mentors</span>
+        <span><strong style="color: var(--teal);"></strong> Active Engagements</span>
+        <span><strong style="color: var(--teal);"></strong> Satisfaction</span>
+      </div>
+    </section>
+
+    <!-- CTA -->
+    <section class="hero" style="background: linear-gradient(135deg, var(--teal), var(--orange)); color: white; margin: 3rem 0; padding: 3rem 2rem; border-radius: var(--radius-lg); margin-left: 230px;">
+      <h2 style="color: white; margin-bottom: 0.5rem;">Ready to accelerate your career?</h2>
+      <p style="color: rgba(255,255,255,0.9); margin-bottom: 1.5rem;">Join thousands of users already leveling up their skills.</p>
+      <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+        <a href="#" class="btn" style="background: white; color: var(--teal);" id="ctaMentee">Join as a Mentee</a>
+        <a href="#" class="btn" style="background: white; color: var(--orange);" id="ctaMentor">Apply to Mentor</a>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="footer">
+    © 2026 MentorBridge. Empowering the next generation of tech leaders.
+  </footer>
+
+  <!-- Scripts - do NOT load mentee-dashboard.js on landing page (causes redirect/errors) -->
+  <script src="js/auth.js"></script>
+  <script src="js/api.js"></script>
+  <script>
+    // Redirect if already logged in
+    (function() {
+      const user = getSession();
+      if (user) {
+        window.location.href = user.role === 'mentor' ? '/mentor-dashboard.html' : '/mentee-dashboard.html';
+      }
+    })();
+
+    // Show/hide auth section
+    const authSection = document.getElementById('authSection');
+    const authForm = document.getElementById('authForm');
+    const authTitle = document.getElementById('authTitle');
+    const authMode = document.getElementById('authMode');
+    const authSubmitText = document.getElementById('authSubmitText');
+    const signupFields = document.getElementById('signupFields');
+    const authToggleText = document.getElementById('authToggleText');
+    const authToggleLink = document.getElementById('authToggleLink');
+
+    function showAuth(mode) {
+      authSection.style.display = 'block';
+      authSection.scrollIntoView({ behavior: 'smooth' });
+      authMode.value = mode;
+      if (mode === 'signup') {
+        authTitle.textContent = 'Sign Up';
+        authSubmitText.textContent = 'Sign Up';
+        signupFields.style.display = 'block';
+        authToggleText.textContent = 'Already have an account?';
+        authToggleLink.textContent = 'Login';
+      } else {
+        authTitle.textContent = 'Login';
+        authSubmitText.textContent = 'Login';
+        signupFields.style.display = 'none';
+        authToggleText.textContent = "Don't have an account?";
+        authToggleLink.textContent = 'Sign up';
+      }
+    }
+
+    document.getElementById('navLogin').addEventListener('click', e => { e.preventDefault(); showAuth('login'); });
+    document.getElementById('navGetStarted').addEventListener('click', e => { e.preventDefault(); showAuth('signup'); });
+    document.getElementById('btnStartJourney').addEventListener('click', () => showAuth('signup'));
+    document.getElementById('btnFindMentor').addEventListener('click', e => { e.preventDefault(); showAuth('login'); });
+    document.getElementById('ctaMentee').addEventListener('click', e => { e.preventDefault(); showAuth('signup'); });
+    document.getElementById('ctaMentor').addEventListener('click', e => { e.preventDefault(); showAuth('signup'); });
+
+    authToggleLink.addEventListener('click', e => {
+      e.preventDefault();
+      showAuth(authMode.value === 'login' ? 'signup' : 'login');
+    });
+
+    // Role selection UI
+    document.querySelectorAll('.role-option').forEach(el => {
+      el.addEventListener('click', () => {
+        document.querySelectorAll('.role-option').forEach(o => o.classList.remove('selected'));
+        el.classList.add('selected');
+        el.querySelector('input').checked = true;
+      });
+    });
+    document.querySelector('.role-option[data-role="mentee"]').classList.add('selected');
+
+    // Form submit
+    authForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const email = document.getElementById('authEmail').value;
+      const password = document.getElementById('authPassword').value;
+
+      try {
+        if (authMode.value === 'login') {
+          const { user } = await api.login(email, password);
+          setSession(user);
+          window.location.href = user.role === 'mentor' ? '/mentor-dashboard.html' : '/mentee-dashboard.html';
+        } else {
+          const name = document.getElementById('authName').value;
+          const role = document.querySelector('input[name="role"]:checked').value;
+          const { user } = await api.signup({ email, password, name, role });
+          setSession(user);
+          window.location.href = '/profile.html';
+        }
+      } catch (err) {
+        const msg = err.message || 'Something went wrong';
+        console.error('Auth error:', err);
+        alert(msg);
+      }
+    });
+  </script>
+</body>
+</html>

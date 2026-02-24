@@ -1,0 +1,16 @@
+{
+  "name": "mentorbridge-mvp",
+  "version": "1.0.0",
+  "description": "MentorBridge - Mentor-Mentee web app MVP",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js"
+  },
+  "dependencies": {
+    "cors": "^2.8.6",
+    "dotenv": "^17.3.1",
+    "express": "^4.22.1",
+    "openai": "^6.22.0"
+  }
+}
